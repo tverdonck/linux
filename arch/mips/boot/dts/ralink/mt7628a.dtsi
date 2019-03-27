@@ -39,6 +39,17 @@
 			reg = <0x0 0x100>;
 		};
 
+		watchdog: watchdog@100 {
+			compatible = "mediatek,mt7621-wdt";
+			reg = <0x100 0x30>;
+
+			resets = <&resetc 8>;
+			reset-names = "wdt";
+
+			interrupt-parent = <&intc>;
+			interrupts = <24>;
+		};
+
 		intc: interrupt-controller@200 {
 			compatible = "ralink,rt2880-intc";
 			reg = <0x200 0x100>;
@@ -60,6 +71,23 @@
 		memory-controller@300 {
 			compatible = "ralink,mt7620a-memc";
 			reg = <0x300 0x100>;
+		};
+
+		spi0: spi@b00 {
+			compatible = "ralink,mt7621-spi";
+			reg = <0xb00 0x40>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			resets = <&resetc 18>;
+			reset-names = "spi";
+
+			clock-frequency = <200000000>;
+
+			pinctrl-names = "default";
+			pinctrl-0 = <&spi_pins>;
+
+			status = "disabled";
 		};
 
 		uart0: uartlite@c00 {
@@ -113,6 +141,19 @@
 		reset-names = "host", "device";
 	};
 
+	sdhci: sdhci@10130000 {
+		compatible = "ralink,mt7620-sdhci";
+		reg = <0x10130000 0x4000>;
+
+		interrupt-parent = <&intc>;
+		interrupts = <14>;
+
+		pinctrl-names = "default";
+		pinctrl-0 = <&sdxc_pins>;
+
+		status = "disabled";
+	};
+
 	ehci@101c0000 {
 		compatible = "generic-ehci";
 		reg = <0x101c0000 0x1000>;
@@ -122,5 +163,15 @@
 
 		interrupt-parent = <&intc>;
 		interrupts = <18>;
+	};
+
+	wmac: wmac@10300000 {
+		compatible = "mediatek,mt7628-wmac";
+		reg = <0x10300000 0x100000>;
+
+		interrupt-parent = <&cpuintc>;
+		interrupts = <6>;
+
+		status = "disabled";
 	};
 };
